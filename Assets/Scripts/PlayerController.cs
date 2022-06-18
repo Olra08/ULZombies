@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,11 +9,16 @@ public class PlayerController : MonoBehaviour
     Vector2 velocity;
     Vector2 frameVelocity;
 
+    public Text vida;
+    public int valorVida = 100;
+
     public float moveSpeed = 1f;
     public float jumpForce = 3f;
     public float fireRange = 5f;
     public float rotationXSensitivity = 1f;
     public GameObject explosion;
+    public GameObject explosionM;
+    private Transform mShootPoint;
 
     private PlayerInputAction mInputAction;
     private InputAction mMovementAction;
@@ -20,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody mRigidbody;
     private Transform mFirePoint;
     private Transform mCameraTransform;
+    private Transform mWeapon;
     private float mRotationX = 0f;
     private bool jumpPressed = false;
     private bool onGround = true;
@@ -30,6 +37,8 @@ public class PlayerController : MonoBehaviour
         mRigidbody = GetComponent<Rigidbody>();
         mFirePoint = transform.Find("FirePoint");
         mCameraTransform = transform.Find("Main Camera");
+        mShootPoint = transform.Find("Main Camera").Find("ShootPoint");
+        mWeapon = transform.Find("Main Camera").Find("AKM");
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -68,14 +77,17 @@ public class PlayerController : MonoBehaviour
         
         mRotationX -= deltaPos.y * rotationXSensitivity;
         mCameraTransform.localRotation = Quaternion.Euler(Mathf.Clamp(mRotationX, -90f, 90f), 0f, 0f);*/
-        Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-        Vector2 rawFrameVelocity = Vector2.Scale(mouseDelta, Vector2.one * sensitivity);
-        frameVelocity = Vector2.Lerp(frameVelocity, rawFrameVelocity, 1 / smoothing);
-        velocity += frameVelocity;
-        velocity.y = Mathf.Clamp(velocity.y, -90, 90);
+        if (valorVida > 0)
+        {
+            Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+            Vector2 rawFrameVelocity = Vector2.Scale(mouseDelta, Vector2.one * sensitivity);
+            frameVelocity = Vector2.Lerp(frameVelocity, rawFrameVelocity, 1 / smoothing);
+            velocity += frameVelocity;
+            velocity.y = Mathf.Clamp(velocity.y, -90, 90);
 
-        mCameraTransform.localRotation = Quaternion.AngleAxis(-velocity.y, Vector3.right);
-        transform.localRotation = Quaternion.AngleAxis(velocity.x, Vector3.up);
+            mCameraTransform.localRotation = Quaternion.AngleAxis(-velocity.y, Vector3.right);
+            transform.localRotation = Quaternion.AngleAxis(velocity.x, Vector3.up);
+        }
         #endregion
 
         #region Movimiento
@@ -107,19 +119,41 @@ public class PlayerController : MonoBehaviour
         // Lanzar un raycast
         RaycastHit hit;
 
+        mShootPoint.GetComponent<ParticleSystem>().Play();
+
         if (Physics.Raycast(mFirePoint.position, mCameraTransform.forward, out hit, fireRange))
         {
             // Hubo colision
             Debug.Log(hit.collider.name);
-            GameObject newExplosion = Instantiate(explosion, hit.point, transform.rotation);
-            Destroy(newExplosion, 1f);
+            if (hit.collider.name == "Enemy")
+            {
+                GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
+                Destroy(newExplosion, 1f);
+            }
+            else
+            {
+                GameObject newExplosion = Instantiate(explosion, hit.point, transform.rotation);
+                Destroy(newExplosion, 1f);
+            }
         }
         Debug.DrawRay(mFirePoint.position, transform.forward * fireRange, Color.red, .25f);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("collision");
+        //Debug.Log("collision");
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            valorVida -= 10;
+        }
+        vida.text = valorVida.ToString() + "%";
+        if (valorVida <= 0)
+        {
+            vida.gameObject.SetActive(false);
+            mWeapon.gameObject.SetActive(false);
+            Time.timeScale = 0;
+            OnDisable();
+        }
         onGround = true;
         jumpPressed = false;
     }
