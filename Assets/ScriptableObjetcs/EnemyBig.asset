@@ -15,4 +15,4 @@ MonoBehaviour:
   enemyName: EnemyBig
   prefab: {fileID: 0}
   speed: 0.5
-  health: 100
+  health: 15

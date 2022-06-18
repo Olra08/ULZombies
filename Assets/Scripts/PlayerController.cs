@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public GameObject explosion;
     public GameObject explosionM;
     private Transform mShootPoint;
+    public EnemyController mEnemyController;
 
     private PlayerInputAction mInputAction;
     private InputAction mMovementAction;
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
     private Transform mFirePoint;
     private Transform mCameraTransform;
     private Transform mWeapon;
-    private float mRotationX = 0f;
+    //private float mRotationX = 0f;
     private bool jumpPressed = false;
     private bool onGround = true;
 
@@ -129,6 +130,8 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
                 Destroy(newExplosion, 1f);
+                mEnemyController.data.health--;
+                Debug.Log(mEnemyController.data.health);
             }
             else
             {

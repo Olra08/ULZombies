@@ -1,11 +1,14 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
     public Transform followAt;
     public float distanceToFollow;
     public EnemySO data;
+    public Text puntaje;
+    public int valorPuntaje = 0;
 
     private NavMeshAgent mNavMeshAgent;
     private Animator mAnimator;
@@ -19,6 +22,15 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         mNavMeshAgent.speed = data.speed;
+        if (data.name == "EnemySmall")
+        {
+            data.health = 5;
+            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        }
+        else
+        {
+            data.health = 15;
+        }
     }
 
     private void Update()
@@ -35,6 +47,12 @@ public class EnemyController : MonoBehaviour
         {
             mNavMeshAgent.isStopped = true;
             mAnimator.SetTrigger("Stop");
+        }
+        if (data.health <= 0)
+        {
+            Destroy(gameObject);
+            valorPuntaje += 10;
+            puntaje.text = valorPuntaje.ToString();
         }
     }
 }
