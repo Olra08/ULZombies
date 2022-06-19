@@ -19,7 +19,8 @@ public class PlayerController : MonoBehaviour
     public GameObject explosion;
     public GameObject explosionM;
     private Transform mShootPoint;
-    public EnemyController mEnemyController;
+    public EnemyController mEnemyBig;
+    public EnemyController mEnemySmall;
 
     private PlayerInputAction mInputAction;
     private InputAction mMovementAction;
@@ -126,12 +127,18 @@ public class PlayerController : MonoBehaviour
         {
             // Hubo colision
             Debug.Log(hit.collider.name);
-            if (hit.collider.name == "Enemy")
+            if (hit.collider.tag == "EnemyBig")
             {
                 GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
                 Destroy(newExplosion, 1f);
-                mEnemyController.data.health--;
-                Debug.Log(mEnemyController.data.health);
+                //mEnemyBig.data.health--;
+                //Debug.Log(mEnemyBig.data.health);
+            } else if (hit.collider.tag == "EnemySmall")
+            {
+                GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
+                Destroy(newExplosion, 1f);
+                //mEnemySmall.data.health--;
+                //Debug.Log(mEnemySmall.data.health);
             }
             else
             {
@@ -145,9 +152,12 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("collision");
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("EnemySmall"))
         {
             valorVida -= 10;
+        } else if (collision.gameObject.CompareTag("EnemyBig"))
+        {
+            valorVida -= 25;
         }
         vida.text = valorVida.ToString() + "%";
         if (valorVida <= 0)

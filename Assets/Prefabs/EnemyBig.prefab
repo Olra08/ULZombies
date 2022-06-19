@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 3750006450407904084}
   - component: {fileID: 9050526529417708479}
   m_Layer: 0
-  m_Name: Enemy
-  m_TagString: Enemy
+  m_Name: EnemyBig
+  m_TagString: EnemyBig
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68,9 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942618029265e6d49ab92ecbdcbecdc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followAt: {fileID: 0}
   distanceToFollow: 6
-  data: {fileID: 11400000, guid: ef83d965556994f4d91731a996c773ad, type: 2}
+  data: {fileID: 11400000, guid: 332de10803eb9d84abc5ea48254716ea, type: 2}
 --- !u!136 &9050526529417708479
 CapsuleCollider:
   m_ObjectHideFlags: 0

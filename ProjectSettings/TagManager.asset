@@ -7,6 +7,10 @@ TagManager:
   - Mutant
   - Enemy
   - ExplosionM
+  - Jugador
+  - Canvas
+  - EnemyBig
+  - EnemySmall
   layers:
   - Default
   - TransparentFX

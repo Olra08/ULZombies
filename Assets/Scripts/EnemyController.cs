@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
-    public Transform followAt;
+    private Transform followAt;
     public float distanceToFollow;
     public EnemySO data;
-    public Text puntaje;
-    public int valorPuntaje = 0;
+    private Text puntaje;
+    private int valorPuntaje = 0;
 
     private NavMeshAgent mNavMeshAgent;
     private Animator mAnimator;
@@ -21,13 +21,16 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
+        followAt = GameObject.FindGameObjectWithTag("Jugador").transform;
+        puntaje = GameObject.FindGameObjectWithTag("Canvas").transform.Find("Puntaje").GetComponent<Text>();
+
         mNavMeshAgent.speed = data.speed;
         if (data.name == "EnemySmall")
         {
             data.health = 5;
-            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            //transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         }
-        else
+        else if (data.name == "EnemyBig")
         {
             data.health = 15;
         }
