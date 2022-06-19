@@ -707,8 +707,10 @@ MonoBehaviour:
   rotationXSensitivity: 0.25
   explosion: {fileID: 6698913938614866791, guid: a7eb4f4880b82fe42a9a35ba627f7edc, type: 3}
   explosionM: {fileID: 6698913938614866791, guid: f9199e23f1d057748aef214f7d091df1, type: 3}
-  mEnemyBig: {fileID: 0}
-  mEnemySmall: {fileID: 0}
+  mEnemyBig: {fileID: 3750006450407904084, guid: 21cbdf94ace0eec4cb623a90b9645def, type: 3}
+  enemyBig: {fileID: 3750006450407904086, guid: 21cbdf94ace0eec4cb623a90b9645def, type: 3}
+  enemySmall: {fileID: 3750006450407904086, guid: b910b496315c2e840b68361d90ccabbb, type: 3}
+  mEnemySmall: {fileID: 3750006450407904084, guid: b910b496315c2e840b68361d90ccabbb, type: 3}
 --- !u!54 &340752619
 Rigidbody:
   m_ObjectHideFlags: 0

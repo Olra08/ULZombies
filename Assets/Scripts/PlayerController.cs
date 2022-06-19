@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     public GameObject explosionM;
     private Transform mShootPoint;
     public EnemyController mEnemyBig;
+    public Transform enemyBig;
+    public Transform enemySmall;
     public EnemyController mEnemySmall;
 
     private PlayerInputAction mInputAction;
@@ -73,12 +75,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         #region Rotacion
-        /*
-        Vector2 deltaPos = mViewAction.ReadValue<Vector2>();
-        transform.Rotate(Vector3.up * deltaPos.x * Time.deltaTime * 10);
-        
-        mRotationX -= deltaPos.y * rotationXSensitivity;
-        mCameraTransform.localRotation = Quaternion.Euler(Mathf.Clamp(mRotationX, -90f, 90f), 0f, 0f);*/
         if (valorVida > 0)
         {
             Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
@@ -93,12 +89,8 @@ public class PlayerController : MonoBehaviour
         #endregion
 
         #region Movimiento
-        /*
-        Vector2 movement = Vector2.ClampMagnitude(mMovementAction.ReadValue<Vector2>(), 1f);
-        mRigidbody.velocity = movement.x * transform.right * moveSpeed + movement.y * transform.forward * moveSpeed + transform.up * mRigidbody.velocity.y;*/
         Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, Input.GetAxis("Vertical") * moveSpeed);
         mRigidbody.velocity = transform.rotation * new Vector3(targetVelocity.x, mRigidbody.velocity.y, targetVelocity.y);
-        //mRigidbody.velocity = new Vector3(movement.x * moveSpeed, mRigidbody.velocity.y, movement.y * moveSpeed);
         #endregion
 
         #region Salto
@@ -131,14 +123,22 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
                 Destroy(newExplosion, 1f);
-                //mEnemyBig.data.health--;
-                //Debug.Log(mEnemyBig.data.health);
+                mEnemyBig.data.health--;
+                Debug.Log("Big = " + mEnemyBig.data.health);
+                if (mEnemyBig.data.health <= 0)
+                {
+                    Destroy(enemyBig);
+                }
             } else if (hit.collider.tag == "EnemySmall")
             {
                 GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
                 Destroy(newExplosion, 1f);
-                //mEnemySmall.data.health--;
-                //Debug.Log(mEnemySmall.data.health);
+                mEnemySmall.data.health--;
+                Debug.Log("Small = " + mEnemySmall.data.health);
+                if (mEnemySmall.data.health <= 0)
+                {
+                    Destroy(enemySmall);
+                }
             }
             else
             {
