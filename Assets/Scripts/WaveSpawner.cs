@@ -1,63 +1,75 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
-    public WaveSO[] waves;
-
-    private WaveSO currentWave;
+    public WaveSO wave;
 
     [SerializeField]
-    private Transform[] spawnpoints;
+    private Transform[] spawnPoints;
+    private int waveInterval = 5;
+    private bool firstWave = false;
+    public Text nextWave;
 
+    private float timeRemaining;
     private float timeBtwnSpawns;
-    private int i = 0;
-
-    private bool stopSpawning = false;
 
     private void Awake()
     {
-
-        currentWave = waves[i];
-        timeBtwnSpawns = currentWave.TimeBeforeThisWave;
+        timeBtwnSpawns = wave.TimeBeforeThisWave;
+        timeRemaining = timeBtwnSpawns + 1;
     }
 
     private void Update()
     {
-        if (stopSpawning)
+        if (!firstWave)
         {
-            return;
+            SpawnWave();
+            firstWave = true;
         }
+        
+        timeRemaining -= Time.deltaTime;
+        nextWave.text = "Next Wave: " + (int)timeRemaining;
 
         if (Time.time >= timeBtwnSpawns)
         {
             SpawnWave();
-            IncWave();
+            if (wave.TimeBeforeThisWave - waveInterval >= 10)
+            {
+                timeBtwnSpawns = Time.time + (wave.TimeBeforeThisWave - waveInterval);
+                timeRemaining = wave.TimeBeforeThisWave - waveInterval + 1;
+                waveInterval += 5;
+            }
 
-            timeBtwnSpawns = Time.time + currentWave.TimeBeforeThisWave;
+            if (wave.TimeBeforeThisWave <= 10 || wave.TimeBeforeThisWave - waveInterval < 10)
+            {
+                timeBtwnSpawns = Time.time + 10;
+                timeRemaining = 11;
+            }
         }
+        Debug.Log(((int)Time.time));
     }
 
     private void SpawnWave()
     {
-        for (int i = 0; i < currentWave.NumberToSpawn; i++)
+        for (int i = 0; i < wave.NumberToSpawn; i++)
         {
-            int num = Random.Range(0, currentWave.EnemiesInWave.Length);
-            int num2 = Random.Range(0, spawnpoints.Length);
+            int num = Random.Range(0, wave.EnemiesInWave.Length);
+            int num2 = Random.Range(0, spawnPoints.Length);
 
-            Instantiate(currentWave.EnemiesInWave[num], spawnpoints[num2].position, spawnpoints[num2].rotation);
+            Instantiate(wave.EnemiesInWave[num], spawnPoints[num2].position, spawnPoints[num2].rotation);
         }
     }
-
-    private void IncWave()
+    /*
+    private void NextWaveUpdate()
     {
-        if (i + 1 < waves.Length)
+        if (wave.TimeBeforeThisWave - waveInterval < 10 || waveInterval)
         {
-            i++;
-            currentWave = waves[i];
+            timeRemaining = 10;
         }
         else
         {
-            stopSpawning = true;
+            timeRemaining = wave.TimeBeforeThisWave - waveInterval;
         }
-    }
+    }*/
 }

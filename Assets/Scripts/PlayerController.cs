@@ -12,17 +12,19 @@ public class PlayerController : MonoBehaviour
     public Text vida;
     public int valorVida = 100;
 
+    private int puntaje = 0;
+
+    private RawImage mImage;
+    public Texture[] mCaras = new Texture[6];
+
     public float moveSpeed = 1f;
     public float jumpForce = 3f;
     public float fireRange = 5f;
     public float rotationXSensitivity = 1f;
+
     public GameObject explosion;
     public GameObject explosionM;
     private Transform mShootPoint;
-    public EnemyController mEnemyBig;
-    public Transform enemyBig;
-    public Transform enemySmall;
-    public EnemyController mEnemySmall;
 
     private PlayerInputAction mInputAction;
     private InputAction mMovementAction;
@@ -31,19 +33,21 @@ public class PlayerController : MonoBehaviour
     private Transform mFirePoint;
     private Transform mCameraTransform;
     private Transform mWeapon;
-    //private float mRotationX = 0f;
     private bool jumpPressed = false;
     private bool onGround = true;
 
+    public GameObject restart;
+
     private void Awake()
     {
+        Time.timeScale = 1;
         mInputAction = new PlayerInputAction();
         mRigidbody = GetComponent<Rigidbody>();
         mFirePoint = transform.Find("FirePoint");
         mCameraTransform = transform.Find("Main Camera");
         mShootPoint = transform.Find("Main Camera").Find("ShootPoint");
         mWeapon = transform.Find("Main Camera").Find("AKM");
-
+        mImage = GameObject.Find("Canvas").transform.Find("Cara").GetComponent<RawImage>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -69,7 +73,6 @@ public class PlayerController : MonoBehaviour
         mInputAction.Player.Jump.Disable();
         mMovementAction.Disable();
         mInputAction.Disable();
-        //mInputAction.Player.View.Disable();
     }
 
     private void Update()
@@ -112,33 +115,15 @@ public class PlayerController : MonoBehaviour
     {
         // Lanzar un raycast
         RaycastHit hit;
-
         mShootPoint.GetComponent<ParticleSystem>().Play();
-
         if (Physics.Raycast(mFirePoint.position, mCameraTransform.forward, out hit, fireRange))
         {
             // Hubo colision
             Debug.Log(hit.collider.name);
-            if (hit.collider.tag == "EnemyBig")
+            if (hit.collider.tag == "EnemySmall" || hit.collider.tag == "EnemyBig")
             {
                 GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
-                Destroy(newExplosion, 1f);
-                mEnemyBig.data.health--;
-                Debug.Log("Big = " + mEnemyBig.data.health);
-                if (mEnemyBig.data.health <= 0)
-                {
-                    Destroy(enemyBig);
-                }
-            } else if (hit.collider.tag == "EnemySmall")
-            {
-                GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
-                Destroy(newExplosion, 1f);
-                mEnemySmall.data.health--;
-                Debug.Log("Small = " + mEnemySmall.data.health);
-                if (mEnemySmall.data.health <= 0)
-                {
-                    Destroy(enemySmall);
-                }
+                Destroy(newExplosion, 0.1f);
             }
             else
             {
@@ -151,23 +136,61 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("collision");
+        
+
         if (collision.gameObject.CompareTag("EnemySmall"))
         {
             valorVida -= 10;
+            Vector3 direction = collision.transform.position - transform.position;
+            mRigidbody.AddForce(direction * 10f, ForceMode.Impulse);
         } else if (collision.gameObject.CompareTag("EnemyBig"))
         {
-            valorVida -= 25;
+            valorVida -= 20;
+            Vector3 direction = collision.transform.position - transform.position;
+            mRigidbody.AddForce(direction * 10f, ForceMode.Impulse);
         }
-        vida.text = valorVida.ToString() + "%";
+
+        if (valorVida > 80)
+        {
+            mImage.texture = mCaras[0];
+        } else if (valorVida > 60)
+        {
+            mImage.texture = mCaras[1];
+        } else if (valorVida > 40)
+        {
+            mImage.texture = mCaras[2];
+        } else if (valorVida > 20)
+        {
+            mImage.texture = mCaras[3];
+        } else if (valorVida > 0)
+        {
+            mImage.texture = mCaras[4];
+        }
+
         if (valorVida <= 0)
         {
-            vida.gameObject.SetActive(false);
+            vida.text = "0%";
+            mImage.texture = mCaras[5];
             mWeapon.gameObject.SetActive(false);
             Time.timeScale = 0;
-            OnDisable();
+            restart.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+        if (valorVida > 0)
+        {
+            vida.text = valorVida.ToString() + "%";
         }
         onGround = true;
         jumpPressed = false;
+    }
+
+    public int getPuntaje()
+    {
+        return puntaje;
+    }
+
+    public void setPuntaje(int puntos)
+    {
+        puntaje += puntos;
     }
 }

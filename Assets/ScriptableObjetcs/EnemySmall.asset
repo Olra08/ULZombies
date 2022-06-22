@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EnemySmall
   m_EditorClassIdentifier: 
   enemyName: EnemySmall
-  prefab: {fileID: 0}
-  speed: 2
-  health: 0
+  prefab: {fileID: 3750006450407904087, guid: b910b496315c2e840b68361d90ccabbb, type: 3}
+  speed: 1.8
+  health: 5

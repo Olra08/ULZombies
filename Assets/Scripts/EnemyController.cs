@@ -6,9 +6,14 @@ public class EnemyController : MonoBehaviour
 {
     private Transform followAt;
     public float distanceToFollow;
+    
     public EnemySO data;
+    private float health;
+    public Slider healthbar;
+
     private Text puntaje;
-    private int valorPuntaje = 0;
+
+    private PlayerController player;
 
     private NavMeshAgent mNavMeshAgent;
     private Animator mAnimator;
@@ -24,16 +29,10 @@ public class EnemyController : MonoBehaviour
         followAt = GameObject.FindGameObjectWithTag("Jugador").transform;
         puntaje = GameObject.FindGameObjectWithTag("Canvas").transform.Find("Puntaje").GetComponent<Text>();
 
+        player = GameManager.GetInstance().player;
+
         mNavMeshAgent.speed = data.speed;
-        if (data.name == "EnemySmall")
-        {
-            data.health = 5;
-            //transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        }
-        else if (data.name == "EnemyBig")
-        {
-            data.health = 15;
-        }
+        health = data.health;
     }
 
     private void Update()
@@ -51,11 +50,22 @@ public class EnemyController : MonoBehaviour
             mNavMeshAgent.isStopped = true;
             mAnimator.SetTrigger("Stop");
         }
-        if (data.health <= 0)
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other);
+        if (other.gameObject.CompareTag("ExplosionM"))
         {
-            Destroy(gameObject);
-            valorPuntaje += 10;
-            puntaje.text = valorPuntaje.ToString();
+            health--;
+            healthbar.value -= 0.1f;
+            Debug.Log(health);
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+                player.setPuntaje(10);
+                puntaje.text = player.getPuntaje().ToString();
+            }
         }
     }
 }
