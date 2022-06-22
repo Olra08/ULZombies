@@ -54,12 +54,11 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other);
         if (other.gameObject.CompareTag("ExplosionM"))
         {
             health--;
             healthbar.value -= 0.1f;
-            Debug.Log(health);
+            //Debug.Log(health);
             if (health <= 0)
             {
                 Destroy(gameObject);

@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942618029265e6d49ab92ecbdcbecdc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToFollow: 6
+  distanceToFollow: 10
   data: {fileID: 11400000, guid: ef83d965556994f4d91731a996c773ad, type: 2}
   healthbar: {fileID: 4307325508324726055}
 --- !u!136 &9050526529417708479

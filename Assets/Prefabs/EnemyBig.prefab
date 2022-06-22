@@ -445,7 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942618029265e6d49ab92ecbdcbecdc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToFollow: 6
+  distanceToFollow: 8
   data: {fileID: 11400000, guid: 332de10803eb9d84abc5ea48254716ea, type: 2}
   healthbar: {fileID: 5584393567267378401}
 --- !u!136 &9050526529417708479

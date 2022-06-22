@@ -47,7 +47,7 @@ public class WaveSpawner : MonoBehaviour
                 timeRemaining = 11;
             }
         }
-        Debug.Log(((int)Time.time));
+        //Debug.Log(((int)Time.time));
     }
 
     private void SpawnWave()
@@ -60,16 +60,4 @@ public class WaveSpawner : MonoBehaviour
             Instantiate(wave.EnemiesInWave[num], spawnPoints[num2].position, spawnPoints[num2].rotation);
         }
     }
-    /*
-    private void NextWaveUpdate()
-    {
-        if (wave.TimeBeforeThisWave - waveInterval < 10 || waveInterval)
-        {
-            timeRemaining = 10;
-        }
-        else
-        {
-            timeRemaining = wave.TimeBeforeThisWave - waveInterval;
-        }
-    }*/
 }

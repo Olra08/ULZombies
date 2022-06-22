@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(mFirePoint.position, mCameraTransform.forward, out hit, fireRange))
         {
             // Hubo colision
-            Debug.Log(hit.collider.name);
+            //Debug.Log(hit.collider.name);
             if (hit.collider.tag == "EnemySmall" || hit.collider.tag == "EnemyBig")
             {
                 GameObject newExplosion = Instantiate(explosionM, hit.point, transform.rotation);
@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("EnemySmall"))
         {
-            valorVida -= 10;
+            valorVida -= 5;
             Vector3 direction = collision.transform.position - transform.position;
             mRigidbody.AddForce(direction * 10f, ForceMode.Impulse);
         } else if (collision.gameObject.CompareTag("EnemyBig"))
